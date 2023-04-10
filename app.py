@@ -50,7 +50,6 @@ db_links_path = os.path.join('data', 'links.pickle')
 
 try:
     mails = get_data(db_mails_path)
-    print(mails)
 except:
     mails = [{
         'mail': '',
@@ -417,23 +416,40 @@ class Main(tk.Tk):
         mail_index = self.mails.index(self.cb_all_mails.get())
 
         if mail_index != 0:
-
+            threads = []
             state = self.check_btn_webdriver_visibility.state()
             mail = mails[mail_index]
 
-            driver = utils.get_driver(state)
-            website = self.cb_all_websites.get()
-            new_task = Thread(target=utils.run_mail, args=(
-            driver, mail, self.info, self.error, links, set_data, db_links_path,
-            (meteojob, lefigaro, hellowork, monster, welcometothejungle), website))
 
-            new_task.start()
+            threads.append(
+                self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                                                   (meteojob, lefigaro, hellowork, monster, welcometothejungle),
+                                                   'meteojob')))
 
-            try:
-                while new_task.is_alive():
-                    self.update()
-            except:
-                pass
+            threads.append(
+                self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                                                   (meteojob, lefigaro, hellowork, monster, welcometothejungle),
+                                                   'lefigaro')))
+
+            threads.append(
+                self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                                                   (meteojob, lefigaro, hellowork, monster, welcometothejungle),
+                                                   'hellowork')))
+
+            threads.append(
+                self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                                                   (meteojob, lefigaro, hellowork, monster, welcometothejungle),
+                                                   'monster')))
+
+            threads.append(
+                self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                                                   (meteojob, lefigaro, hellowork, monster, welcometothejungle),
+                                                   'welcometothejungle')))
+
+            for thread in threads:
+                thread.join()
+
+            self.info('All Websites are done')
 
     def start_selected_mail(self):
         mail_index = self.mails.index(self.cb_all_mails.get())
@@ -445,11 +461,10 @@ class Main(tk.Tk):
 
             driver = utils.get_driver(state)
             website = self.cb_all_websites.get()
-            print(website)
 
             new_task = Thread(target=utils.run_mail, args=(
-            driver, mail, self.info, self.error, links, set_data, db_links_path,
-            (meteojob, lefigaro, hellowork, monster, welcometothejungle), website))
+                driver, mail, self.info, self.error, links, set_data, db_links_path,
+                (meteojob, lefigaro, hellowork, monster, welcometothejungle), website))
 
             new_task.start()
 
@@ -460,40 +475,65 @@ class Main(tk.Tk):
                 pass
 
     def start_from_mail(self):
-        threads = []
         mail_index = self.mails.index(self.cb_all_mails.get())
         for mail_ in mails[mail_index:]:
             if mail_ != '':
                 mail_index = self.mails.index(mail_['mail'])
 
                 if mail_index != 0:
-
+                    threads = []
                     state = self.check_btn_webdriver_visibility.state()
                     mail = mails[mail_index]
 
-                    driver = utils.get_driver(state)
-                    website = self.cb_all_websites.get()
-                    new_task = Thread(target=utils.run_mail, args=(
-                    driver, mail, self.info, self.error, links, set_data, db_links_path,
-                    (meteojob, lefigaro, hellowork, monster, welcometothejungle), website))
-                    threads.append(new_task)
-                    new_task.start()
+                    threads.append(self.start_thread(utils.run_mail, (
+                        utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                        (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'meteojob')))
 
-                    try:
-                        while new_task.is_alive():
-                            self.update()
-                    except:
-                        pass
+                    threads.append(self.start_thread(utils.run_mail, (
+                        utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                        (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'lefigaro')))
 
-        # wait for all threads to finish
-        for t in threads:
-            t.join()
+                    threads.append(self.start_thread(utils.run_mail, (
+                        utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                        (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'hellowork')))
 
+                    threads.append(self.start_thread(utils.run_mail, (
+                        utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                        (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'monster')))
+
+                    threads.append(self.start_thread(utils.run_mail, (
+                        utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                        (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'welcometothejungle')))
+
+                    # wait for all threads to finish
+                    for t in threads:
+                        t.join()
+
+
+    def update_thread(self, thread):
+        try:
+            while thread.is_alive():
+                self.update()
+        except:
+            pass
+    def start_thread(self, function, args):
+        print('starting thread', function)
+        new_task = Thread(target=function, args=args)
+        new_task.start()
+
+        try:
+            while new_task.is_alive():
+                self.update()
+        except:
+            pass
+        return new_task
 
     def start_all_mails(self):
-        threads = []
+
         for mail_ in mails:
+
             try:
+                threads = []
                 if mail_ != '':
                     mail_index = self.mails.index(mail_['mail'])
 
@@ -502,27 +542,32 @@ class Main(tk.Tk):
                         state = self.check_btn_webdriver_visibility.state()
                         mail = mails[mail_index]
 
-                        driver = utils.get_driver(state)
-                        website = self.cb_all_websites.get()
-                        new_task = Thread(target=utils.run_mail, args=(
-                        driver, mail, self.info, self.error, links, set_data, db_links_path,
-                        (meteojob, lefigaro, hellowork, monster, welcometothejungle), website))
 
-                        threads.append(new_task)
-                        new_task.start()
+                        threads.append(self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                                                                      (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'meteojob')))
 
-                        try:
-                            while new_task.is_alive():
-                                self.update()
-                        except:
-                            pass
+                        threads.append(self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                                                                          (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'lefigaro')))
+
+                        threads.append(self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                                                                            (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'hellowork')))
+
+                        threads.append(self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                                                                            (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'monster')))
+
+                        threads.append(self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
+                                                                            (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'welcometothejungle')))
+
+                # wait for all threads to finish
+                for t in threads:
+                    t.join()
+
+                print('all threads finished')
 
             except:
                 pass
 
-        # wait for all threads to finish
-        for t in threads:
-            t.join()
+
 
 
 class NewMail(tk.Tk):

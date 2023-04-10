@@ -87,7 +87,7 @@ def recherche(driver, link,info,error):
         return False
 
     #Find all li elements inside the jobs_results element with partial class name "ais-Hits-list-item"
-    driver.implicitly_wait(5)
+    time.sleep(4)
     jobs = jobs_results.find_elements(By.XPATH, "//li[contains(@class, 'ais-Hits-list-item')]")
     links = [job.find_element(By.TAG_NAME, "a").get_attribute("href") for job in jobs]
 
@@ -121,9 +121,9 @@ def postuler(driver, link,info,error,mail):
             pass
 
         try:
-            driver.implicity_wait(5)
+            driver.implicitly_wait(5)
             cover_letter = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, "cover_letter")))
-            driver.implicity_wait(5)
+            driver.implicitly_wait(5)
             cover_letter.send_keys(mail['websites']['welcometothejungle']['letter'])
             time.sleep(1)
         except NoSuchElementException:

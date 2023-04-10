@@ -66,6 +66,7 @@ def get_parameters(url):
 
 
 def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_module, website_main=''):
+    print("RUN MAIL", website_main)
     try:
         mail_index = [link['mail'] for link in links].index(mail['mail'].replace('\n', ''))
     except:
@@ -88,12 +89,10 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                 if website_module[0].login(driver, mail, info, error):
 
                     info(f"\tConnecté au compte {mail['mail']} sur {website}")
-                    print(mail['websites'][website])
 
                     for link in mail['websites'][website]['research'].split(','):
                         count = 0
                         pass_count = 0
-                        print(link)
 
                         try:
                             params = get_parameters(link)
