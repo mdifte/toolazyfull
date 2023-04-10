@@ -121,7 +121,6 @@ def postuler(driver, link,info,error,mail):
             pass
 
         try:
-            input("Veuillez remplir le formulaire et appuyer sur entrée")
             driver.implicity_wait(5)
             cover_letter = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, "cover_letter")))
             driver.implicity_wait(5)

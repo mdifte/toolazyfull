@@ -479,6 +479,12 @@ class Main(tk.Tk):
                     threads.append(new_task)
                     new_task.start()
 
+                    try:
+                        while new_task.is_alive():
+                            self.update()
+                    except:
+                        pass
+
         # wait for all threads to finish
         for t in threads:
             t.join()
@@ -504,6 +510,12 @@ class Main(tk.Tk):
 
                         threads.append(new_task)
                         new_task.start()
+
+                        try:
+                            while new_task.is_alive():
+                                self.update()
+                        except:
+                            pass
 
             except:
                 pass
