@@ -422,10 +422,10 @@ class Main(tk.Tk):
             mail = mails[mail_index]
 
             driver = utils.get_driver(state)
-
+            website = self.cb_all_websites.get()
             new_task = Thread(target=utils.run_mail, args=(
             driver, mail, self.info, self.error, links, set_data, db_links_path,
-            (meteojob, lefigaro, hellowork, monster, welcometothejungle)))
+            (meteojob, lefigaro, hellowork, monster, welcometothejungle), website))
 
             new_task.start()
 
@@ -472,10 +472,10 @@ class Main(tk.Tk):
                     mail = mails[mail_index]
 
                     driver = utils.get_driver(state)
-
+                    website = self.cb_all_websites.get()
                     new_task = Thread(target=utils.run_mail, args=(
                     driver, mail, self.info, self.error, links, set_data, db_links_path,
-                    (meteojob, lefigaro, hellowork, monster, welcometothejungle)))
+                    (meteojob, lefigaro, hellowork, monster, welcometothejungle), website))
                     threads.append(new_task)
                     new_task.start()
 
@@ -497,10 +497,10 @@ class Main(tk.Tk):
                         mail = mails[mail_index]
 
                         driver = utils.get_driver(state)
-
+                        website = self.cb_all_websites.get()
                         new_task = Thread(target=utils.run_mail, args=(
                         driver, mail, self.info, self.error, links, set_data, db_links_path,
-                        (meteojob, lefigaro, hellowork, monster, welcometothejungle)))
+                        (meteojob, lefigaro, hellowork, monster, welcometothejungle), website))
 
                         threads.append(new_task)
                         new_task.start()
