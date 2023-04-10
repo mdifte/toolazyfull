@@ -516,16 +516,14 @@ class Main(tk.Tk):
                 self.update()
         except:
             pass
+
     def start_thread(self, function, args):
         print('starting thread', function)
         new_task = Thread(target=function, args=args)
         new_task.start()
 
-        try:
-            while new_task.is_alive():
-                self.update()
-        except:
-            pass
+        self.update_thread(new_task)
+
         return new_task
 
     def start_all_mails(self):

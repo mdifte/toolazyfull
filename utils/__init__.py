@@ -66,7 +66,7 @@ def get_parameters(url):
 
 
 def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_module, website_main=''):
-    print("RUN MAIL", website_main)
+
     try:
         mail_index = [link['mail'] for link in links].index(mail['mail'].replace('\n', ''))
     except:
@@ -79,7 +79,6 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
         mail_index = [link['mail'] for link in links].index(mail['mail'].replace('\n', ''))
 
         set_data(links, db_links_path)
-
     for website in mail['websites']:
         if website_main and website_main != website:
             continue
