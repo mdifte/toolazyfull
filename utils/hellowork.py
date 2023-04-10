@@ -14,7 +14,7 @@ def login(driver, mail,info,error):
     driver.get("https://www.hellowork.com/fr-fr")
 
     try:
-        cokie_btn=WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div/div[1]/div/div/div/div/div/div[2]/button[2]')))
+        cokie_btn=WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[5]/div/div[1]/div/div/div/div/div/div[2]/button[2]')))
         cokie_btn.click()
     except:
         pass
@@ -34,10 +34,10 @@ def login(driver, mail,info,error):
     except:
         pass
 
-    login_btn=WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '/html/body/main/div[3]/header/nav/ul/li[6]/details/summary')))
+    login_btn=WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/header/nav/ul/li[5]/details/summary')))
     login_btn.click()
 
-    login_btn=WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '/html/body/main/div[3]/header/nav/ul/li[6]/details/div/ul/li[1]/span/span[1]')))
+    login_btn=WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/header/nav/ul/li[5]/details/div/ul/li[1]/span/span[1]')))
     login_btn.click()
 
     email_input=WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.NAME, 'email2')))

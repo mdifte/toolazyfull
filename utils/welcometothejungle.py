@@ -25,14 +25,15 @@ def login(driver, mail,info,error):
         cookie_button = cookie_div.find_element(By.ID, "axeptio_btn_acceptAll")
         driver.execute_script("arguments[0].click();", cookie_button)
     except TimeoutException:
-        return login(driver, user)
+        info("Exception de temporisation sur la fenêtre contextuelle de cookie")
+        return login(driver, mail,info,error)
     except NoSuchElementException:
         pass
 
     # Login
     login_button = WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[1]/header/div/div[3]/div[2]/button[2]")))
-    login_button.click()
+        EC.element_to_be_clickable((By.XPATH, '//*[@id="header"]/div/div[3]/div[2]/button[2]'))).click()
+
 
     time.sleep(5)
 
@@ -72,7 +73,6 @@ def recherche(driver, link,info,error):
     """Effectuer une recherche"""
     # Recherche
     driver.get(link)
-
     try:
         alert = driver.switch_to.alert
         alert.accept()
@@ -82,13 +82,16 @@ def recherche(driver, link,info,error):
     # Séléction des résultats de recherches
     try:
         jobs_results = WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.XPATH, "//ol[@data-testid='jobs_index-search-results']")))
+            EC.presence_of_element_located((By.ID, "job-search-results")))
     except TimeoutException:
         return False
-    jobs = jobs_results.find_elements_by_class_name("ais-Hits-list-item")
+
+    #Find all li elements inside the jobs_results element with partial class name "ais-Hits-list-item"
+    driver.implicitly_wait(5)
+    jobs = jobs_results.find_elements(By.XPATH, "//li[contains(@class, 'ais-Hits-list-item')]")
     links = [job.find_element(By.TAG_NAME, "a").get_attribute("href") for job in jobs]
 
-    return list(set(links))
+    return links
 
 
 def postuler(driver, link,info,error,mail):
@@ -118,7 +121,10 @@ def postuler(driver, link,info,error,mail):
             pass
 
         try:
+            input("Veuillez remplir le formulaire et appuyer sur entrée")
+            driver.implicity_wait(5)
             cover_letter = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, "cover_letter")))
+            driver.implicity_wait(5)
             cover_letter.send_keys(mail['websites']['welcometothejungle']['letter'])
             time.sleep(1)
         except NoSuchElementException:
