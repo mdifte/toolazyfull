@@ -445,7 +445,7 @@ class Main(tk.Tk):
 
             state = self.check_btn_webdriver_visibility.state()
             mail = mails[mail_index]
-
+            print(mail, mail_index)
             driver = utils.get_driver(state)
             website = self.cb_all_websites.get()
 

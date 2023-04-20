@@ -4,7 +4,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException, NoAlertPresentException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException, NoAlertPresentException, \
+    StaleElementReferenceException
 
 
 def login(driver, mail,info,error):
@@ -87,8 +88,12 @@ def recherche(driver, link,info,error):
         return False
 
     #Find all li elements inside the jobs_results element with partial class name "ais-Hits-list-item"
-    time.sleep(4)
-    jobs = jobs_results.find_elements(By.XPATH, "//li[contains(@class, 'ais-Hits-list-item')]")
+    time.sleep(5)
+    input("Press Enter to continue...")
+    try:
+        jobs = jobs_results.find_elements(By.XPATH, "//li[contains(@class, 'ais-Hits-list-item')]")
+    except StaleElementReferenceException:
+        return recherche(driver, link,info,error)
     links = [job.find_element(By.TAG_NAME, "a").get_attribute("href") for job in jobs]
 
     return links
@@ -148,15 +153,7 @@ def postuler(driver, link,info,error,mail):
         driver.execute_script("arguments[0].click();", submit_button)
         time.sleep(2)
 
-        try:
-            back_to_search_button = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//button[@class='sc-ZqGJI fcbTIk']")))
-            back_to_search_button = driver.find_element(By.XPATH, "//button[@class='sc-ZqGJI fcbTIk']")
-            driver.execute_script("arguments[0].click();", back_to_search_button)
-        except NoSuchElementException:
-            submit_button = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//button[@data-testid='apply-form-submit']")))
-            submit_button = driver.find_element(By.XPATH, "//button[@data-testid='apply-form-submit']")
-            if submit_button:
-                return 'Erreur'
+
 
         try:
             WebDriverWait(driver, 20).until(

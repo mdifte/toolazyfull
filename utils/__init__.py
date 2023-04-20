@@ -329,10 +329,10 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
                             pass
 
                         jobs = welcometothejungle.recherche(driver, link, info, error)
-
                         if jobs:
                             info(f"\tNombre de jobs trouvés : {len(jobs)}")
                             for job in jobs:
+                                print()
                                 if jobs != None:
                                     try:
                                         if get_parameters(job)['o'][0] in [get_parameters(link_)['o'][0] for link_ in
@@ -348,7 +348,9 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
 
                                         links[mail_index]['links'].append(job)
                                         set_data(links, db_links_path)
-                                    except InvalidArgumentException:
+                                        print("JOB set to pickle")
+                                    except InvalidArgumentException as e:
+                                        print(e)
                                         pass
                                     except Exception as e:
                                         print(e)
