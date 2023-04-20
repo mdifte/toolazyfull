@@ -88,8 +88,9 @@ def recherche(driver, link,info,error):
                 link_d=link+'#'+link_
                 if 'job-offer' in link_d:
                     jobs.append(link_d)
-            except:
-                amount-=1
+            except Exception as e:
+                # amount-=1
+                error(e)
 
     except TimeoutException:
         return False

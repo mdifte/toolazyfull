@@ -60,8 +60,8 @@ def recherche(driver, link,info,error):
 
     # Séléction des résultats de recherches
     try:
-        frame=WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, '/html/body/div[1]/div/div/div[2]/div[2]/div[2]/div/div[2]/div')))
-        
+        frame=WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, "job-search--bottom--body--items")))
+
         cards=list(frame.find_elements(By.TAG_NAME, 'a'))
 
     except TimeoutException:
@@ -72,7 +72,7 @@ def recherche(driver, link,info,error):
     for card in cards:
         try:
             jobs.append(card.get_attribute('href'))
-            
+
         except:
             continue
 
