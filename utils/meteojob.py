@@ -31,24 +31,25 @@ def login(driver, mail,info,error):
         pass
         
 
-    login_btn=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[2]/header/div/div[3]/div/ul/li[1]/a')))
+    login_btn=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="header-sticky-container"]/div[3]/div/ul/li[1]/span')))
     login_btn.click()
+
     pyautogui.click(x=100, y=200)
     time.sleep(6)
 
-    email_input=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/app-root/app-signin/app-layout-funnel/cc-layout-funnel/cc-layout/main/div/main/div/cc-block/div/mat-tab-group/div/mat-tab-body[1]/div/div[1]/cc-candidate-signin/cc-candidate-signin-form/form/div[1]/div/mat-form-field/div/div[1]/div[4]/input')))
+    email_input=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//input[@type="email"]')))
     email_input.send_keys(mail['mail'])
     time.sleep(5)
 
-    ok_btn=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/app-root/app-signin/app-layout-funnel/cc-layout-funnel/cc-layout/main/div/main/div/cc-block/div/mat-tab-group/div/mat-tab-body[1]/div/div[1]/cc-candidate-signin/cc-candidate-signin-form/form/div[1]/button')))
+    ok_btn=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//button[@type="submit"]')))
     ok_btn.click()
     time.sleep(5)
 
-    password_input=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/app-root/app-signin/app-layout-funnel/cc-layout-funnel/cc-layout/main/div/main/div/cc-block/div/mat-tab-group/div/mat-tab-body[1]/div/div[1]/cc-candidate-signin/cc-candidate-signin-form/form/div[2]/div/mat-form-field/div/div[1]/div[4]/input')))
+    password_input=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//input[@type="password"]')))
     password_input.send_keys(mail['websites']['meteojob']['password'])
     time.sleep(5)
-  
-    ok_btn=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/app-root/app-signin/app-layout-funnel/cc-layout-funnel/cc-layout/main/div/main/div/cc-block/div/mat-tab-group/div/mat-tab-body[1]/div/div[1]/cc-candidate-signin/cc-candidate-signin-form/form/div[2]/button')))
+
+    ok_btn = WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH, '//button[text()=" Je me connecte "]')))
     ok_btn.click()
 
     time.sleep(10)

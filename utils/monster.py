@@ -17,9 +17,9 @@ def login(driver, mail,info,error):
         WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.ID, 'email')))
 
-        email_input = driver.find_element_by_name("email")
+        email_input = driver.find_element(By.NAME,"email")
         email_input.send_keys(mail['mail'])
-        password_input = driver.find_element_by_name("password")
+        password_input = driver.find_element(By.NAME,"password")
         password_input.send_keys(mail['websites']['monster']['password'])
         time.sleep(1)
         password_input.send_keys(Keys.ENTER)

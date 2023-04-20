@@ -5,6 +5,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, WebDriverException
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
+
 
 
 def login(driver, mail,info,error):
@@ -14,19 +16,21 @@ def login(driver, mail,info,error):
     driver.get("https://www.hellowork.com/fr-fr")
 
     try:
-        cokie_btn=WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[5]/div/div[1]/div/div/div/div/div/div[2]/button[2]')))
+        cokie_btn=WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.XPATH, '//*[@id="hw-cc-notice-accept-btn"]')))
         cokie_btn.click()
     except:
         pass
 
     try:
-        section=WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.XPATH, '/html/body/main/div/div/div/div[2]/div')))
-        section.click()
 
-        france_=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/main/div/div/div/div[2]/ul/li[70]')))
-        france_.click()
+        select_country = Select(WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, 'country'))))
 
-        ok_btn=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/main/div/div/div/button')))
+
+        #select france
+        select_country.select_by_value('FR')
+
+
+        ok_btn=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="service-adaptation"]/div/form/button')))
         ok_btn.click()
 
         time.sleep(10)
@@ -34,10 +38,10 @@ def login(driver, mail,info,error):
     except:
         pass
 
-    login_btn=WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/header/nav/ul/li[5]/details/summary')))
+    login_btn = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '//span[contains(text(),"Mon compte")]')))
     login_btn.click()
 
-    login_btn=WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/header/nav/ul/li[5]/details/div/ul/li[1]/span/span[1]')))
+    login_btn = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '//span[contains(text(),"Se connecter")]')))
     login_btn.click()
 
     email_input=WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.NAME, 'email2')))
