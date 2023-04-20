@@ -213,7 +213,6 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
                         print('Jobs: ' + str(len(jobs)))
 
                         if jobs:
-
                             for job in jobs:
                                 if job != None:
                                     try:
@@ -224,7 +223,6 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
                                         status = hellowork.postuler(driver, job, info, error, mail)
                                         if status == "Postulé":
                                             count += 1
-
                                         links[mail_index]['links'].append(job)
                                         set_data(links, db_links_path)
                                     except InvalidArgumentException:

@@ -89,7 +89,6 @@ def recherche(driver, link,info,error):
 
     #Find all li elements inside the jobs_results element with partial class name "ais-Hits-list-item"
     time.sleep(5)
-    input("Press Enter to continue...")
     try:
         jobs = jobs_results.find_elements(By.XPATH, "//li[contains(@class, 'ais-Hits-list-item')]")
     except StaleElementReferenceException:

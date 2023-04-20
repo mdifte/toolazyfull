@@ -56,20 +56,27 @@ def recherche(driver, link,info,error):
         pass
 
     # Séléction des résultats de recherches
+    print("Séléction des résultats de recherches")
     try:
         jobs_selector = 'article[data-testid="svx_jobCard"]'
-        WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, jobs_selector)))
-        cards = driver.find_elements_by_css_selector(jobs_selector)
+        WebDriverWait(driver, 30).until(EC.visibility_of_element_located((By.CSS_SELECTOR, jobs_selector)))
+        cards = driver.find_elements(By.CSS_SELECTOR, jobs_selector)
+        print(f"{len(cards)} résultats trouvés")
     except TimeoutException:
         return False
 
     jobs = []
-
+    try:
+        cookie_button = WebDriverWait(driver, 3).until(EC.visibility_of_element_located((By.ID, "onetrust-accept-btn-handler")))
+        cookie_button.click()
+    except TimeoutException:
+        pass
     for card in cards:
         try:
             # Check if it's an on site apply job (Quick Apply)
-            button_text = card.find_element_by_css_selector('button[data-test-id="svx-job-apply-button"]').text
-            if button_text != 'Quick Apply':
+            button_text = card.find_element(By.CSS_SELECTOR, 'button[data-testid="svx-job-apply-button"]').text
+
+            if 'rapide' not in button_text.lower():
                 continue
 
             jobs.append(card.get_attribute("data-job-id"))
@@ -83,12 +90,13 @@ def recherche(driver, link,info,error):
 
 def postuler(driver,job, link,info,error,mail):
     try:
-        div = driver.find_element_by_css_selector(f'[data-job-id={job}]')
+        div = driver.find_element(By.CSS_SELECTOR, f'[data-job-id="{job}"]')
     except:
         return "Job non trouvé"
 
     try:
-        apply_button = div.find_element_by_css_selector('button[data-testid="svx-job-apply-button"]')
+        # apply_button = div.find_element_by_css_selector('button[data-testid="svx-job-apply-button"]') Depreciated
+        apply_button = div.find_element(By.CSS_SELECTOR, 'button[data-testid="svx-job-apply-button"]')
         driver.execute_script("arguments[0].click();", apply_button)
         # apply_button.click()
     except NoSuchElementException:
