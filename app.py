@@ -1,22 +1,14 @@
 from tkinter import *
 from tkinter.ttk import *
-
 import tkinter as tk
 from tkinter import ttk
 from entrywp import EntryWP
 from tkinter import Button
-import tkinter.font as tkFont
-from logs import *
-
 from datetime import datetime
 import pyautogui
 import pickle
-import os, inspect
-import time
-
+import os
 import utils
-from utils import meteojob, lefigaro, hellowork, monster, welcometothejungle
-
 from threading import Thread
 
 
@@ -423,27 +415,22 @@ class Main(tk.Tk):
 
             threads.append(
                 self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                                                   (meteojob, lefigaro, hellowork, monster, welcometothejungle),
                                                    'meteojob')))
 
             threads.append(
                 self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                                                   (meteojob, lefigaro, hellowork, monster, welcometothejungle),
                                                    'lefigaro')))
 
             threads.append(
                 self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                                                   (meteojob, lefigaro, hellowork, monster, welcometothejungle),
                                                    'hellowork')))
 
             threads.append(
                 self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                                                   (meteojob, lefigaro, hellowork, monster, welcometothejungle),
                                                    'monster')))
 
             threads.append(
                 self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                                                   (meteojob, lefigaro, hellowork, monster, welcometothejungle),
                                                    'welcometothejungle')))
 
             for thread in threads:
@@ -464,7 +451,7 @@ class Main(tk.Tk):
 
             new_task = Thread(target=utils.run_mail, args=(
                 driver, mail, self.info, self.error, links, set_data, db_links_path,
-                (meteojob, lefigaro, hellowork, monster, welcometothejungle), website))
+                website))
 
             new_task.start()
 
@@ -487,23 +474,23 @@ class Main(tk.Tk):
 
                     threads.append(self.start_thread(utils.run_mail, (
                         utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                        (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'meteojob')))
+                        'meteojob')))
 
                     threads.append(self.start_thread(utils.run_mail, (
                         utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                        (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'lefigaro')))
+                         'lefigaro')))
 
                     threads.append(self.start_thread(utils.run_mail, (
                         utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                        (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'hellowork')))
+                         'hellowork')))
 
                     threads.append(self.start_thread(utils.run_mail, (
                         utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                        (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'monster')))
+                         'monster')))
 
                     threads.append(self.start_thread(utils.run_mail, (
                         utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                        (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'welcometothejungle')))
+                         'welcometothejungle')))
 
                     # wait for all threads to finish
                     for t in threads:
@@ -542,19 +529,19 @@ class Main(tk.Tk):
 
 
                         threads.append(self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                                                                      (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'meteojob')))
+                                                                       'meteojob')))
 
                         threads.append(self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                                                                          (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'lefigaro')))
+                                                                           'lefigaro')))
 
                         threads.append(self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                                                                            (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'hellowork')))
+                                                                             'hellowork')))
 
                         threads.append(self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                                                                            (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'monster')))
+                                                                             'monster')))
 
                         threads.append(self.start_thread(utils.run_mail, (utils.get_driver(state), mail, self.info, self.error, links, set_data, db_links_path,
-                                                                            (meteojob, lefigaro, hellowork, monster, welcometothejungle), 'welcometothejungle')))
+                                                                           'welcometothejungle')))
 
                 # wait for all threads to finish
                 for t in threads:

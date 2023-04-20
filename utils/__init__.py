@@ -4,7 +4,7 @@ from selenium.common.exceptions import InvalidArgumentException
 from urllib.parse import urlparse, parse_qs
 import pickle
 import os, inspect
-
+from . import hellowork, keljob, lefigaro,meteojob,monster,welcometothejungle, indeed
 
 def get_data(path):
     with open(path, 'rb') as file:
@@ -65,7 +65,7 @@ def get_parameters(url):
     return dict_result
 
 
-def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_module, website_main=''):
+def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website_main=''):
 
     try:
         mail_index = [link['mail'] for link in links].index(mail['mail'].replace('\n', ''))
@@ -85,7 +85,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
         if mail['websites'][website]['research'] != '':
             if website == 'meteojob':
 
-                if website_module[0].login(driver, mail, info, error):
+                if meteojob.login(driver, mail, info, error):
 
                     info(f"\tConnecté au compte {mail['mail']} sur {website}")
 
@@ -107,7 +107,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                         except Exception as e:
                             pass
 
-                        jobs = website_module[0].recherche(driver, link, info, error)
+                        jobs = meteojob.recherche(driver, link, info, error)
 
                         if jobs:
 
@@ -116,7 +116,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                                     info(f"{mail['mail']} -- {job} déjà visité")
                                     pass_count += 1
                                     continue
-                                status = website_module[0].postuler(driver, job, info, error, mail)
+                                status = meteojob.postuler(driver, job, info, error, mail)
                                 if status == "Postulé":
                                     count += 1
 
@@ -135,7 +135,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                     error(f"Erreur de connexion avec {mail['mail']} sur www.meteojob.com")
             elif website == 'lefigaro':
 
-                if website_module[1].login(driver, mail, info, error):
+                if lefigaro.login(driver, mail, info, error):
 
                     info(f"\tConnecté au compte {mail['mail']} sur {website}")
 
@@ -154,7 +154,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                         except Exception as e:
                             pass
 
-                        jobs = website_module[1].recherche(driver, link, info, error)
+                        jobs = lefigaro.recherche(driver, link, info, error)
 
                         if jobs:
 
@@ -165,7 +165,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                                         pass_count += 1
                                         continue
                                     try:
-                                        status = website_module[1].postuler(driver, job, info, error, mail)
+                                        status = lefigaro.postuler(driver, job, info, error, mail)
                                         if status == "Postulé":
                                             count += 1
 
@@ -188,7 +188,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                     error(f"Erreur de connexion avec {mail['mail']} sur www.lefigaro.fr")
             elif website == 'hellowork':
 
-                if website_module[2].login(driver, mail, info, error):
+                if hellowork.login(driver, mail, info, error):
 
                     info(f"\tConnecté au compte {mail['mail']} sur {website}")
 
@@ -209,7 +209,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                         info(f"Recherche : {query} en {where}")
 
                         print('looking for jobs')
-                        jobs = website_module[2].recherche(driver, link, info, error)
+                        jobs = hellowork.recherche(driver, link, info, error)
                         print('Jobs: ' + str(len(jobs)))
 
                         if jobs:
@@ -221,7 +221,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                                             info(f"{mail['mail']} -- {job} déjà visité")
                                             pass_count += 1
                                             continue
-                                        status = website_module[2].postuler(driver, job, info, error, mail)
+                                        status = hellowork.postuler(driver, job, info, error, mail)
                                         if status == "Postulé":
                                             count += 1
 
@@ -247,7 +247,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
 
             elif website == 'monster':
 
-                if website_module[3].login(driver, mail, info, error):
+                if monster.login(driver, mail, info, error):
 
                     info(f"\tConnecté au compte {mail['mail']} sur {website}")
 
@@ -270,7 +270,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                         except Exception as e:
                             pass
 
-                        jobs = website_module[3].recherche(driver, link, info, error)
+                        jobs = monster.recherche(driver, link, info, error)
 
                         if jobs:
 
@@ -281,7 +281,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                                             info(f"{mail['mail']} -- {job} déjà visité")
                                             pass_count += 1
                                             continue
-                                        status = website_module[3].postuler(driver, job, link, info, error, mail)
+                                        status = monster.postuler(driver, job, link, info, error, mail)
                                         if status == "Postulé":
                                             count += 1
 
@@ -305,7 +305,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
 
             elif website == 'welcometothejungle':
 
-                if website_module[4].login(driver, mail, info, error):
+                if welcometothejungle.login(driver, mail, info, error):
 
                     info(f"\tConnecté au compte {mail['mail']} sur {website}")
 
@@ -328,7 +328,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                         except Exception as e:
                             pass
 
-                        jobs = website_module[4].recherche(driver, link, info, error)
+                        jobs = welcometothejungle.recherche(driver, link, info, error)
 
                         if jobs:
                             info(f"\tNombre de jobs trouvés : {len(jobs)}")
@@ -342,7 +342,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                                             info(f"{mail['mail']} -- {job} déjà visité")
                                             pass_count += 1
                                             continue
-                                        status = website_module[4].postuler(driver, job, info, error, mail)
+                                        status = welcometothejungle.postuler(driver, job, info, error, mail)
                                         if status == "Postulé":
                                             count += 1
 
@@ -368,7 +368,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
 
             elif website == 'indeed':
 
-                if website_module[4].login(driver, mail, info, error):
+                if indeed.login(driver, mail, info, error):
 
                     info(f"\tConnecté au compte {mail['mail']} sur {website}")
 
@@ -391,7 +391,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                         except Exception as e:
                             pass
 
-                        jobs = website_module[4].recherche(driver, link, info, error)
+                        jobs = indeed.recherche(driver, link, info, error)
 
                         if jobs:
 
@@ -405,7 +405,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path, website_
                                             info(f"{mail['mail']} -- {job} déjà visité")
                                             pass_count += 1
                                             continue
-                                        status = website_module[4].postuler(driver, job, info, error, mail)
+                                        status = indeed.postuler(driver, job, info, error, mail)
                                         if status == "Postulé":
                                             count += 1
 
