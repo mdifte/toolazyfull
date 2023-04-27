@@ -5,6 +5,29 @@ from urllib.parse import urlparse, parse_qs
 import pickle
 import os, inspect
 from . import hellowork, keljob, lefigaro,meteojob,monster,welcometothejungle, indeed
+from email_config import gmail_sender_account,gmail_sender_password, email_body, email_subject
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+def send_email(to, website):
+    try:
+        msg = MIMEMultipart()
+        msg['From'] = gmail_sender_account
+        msg['To'] = to
+        msg['Subject'] = email_subject.format(website=website)
+        msg.attach(MIMEText(email_body, 'plain'))
+
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(gmail_sender_account, gmail_sender_password)
+        text = msg.as_string()
+        server.sendmail(gmail_sender_account, to, text)
+        server.quit()
+        print('Email sent successfully!')
+    except Exception as e:
+        print('Error: ', e)
+        print('Failed to send email.')
 
 def get_data(path):
     with open(path, 'rb') as file:
@@ -116,7 +139,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
                                     info(f"{mail['mail']} -- {job} déjà visité")
                                     pass_count += 1
                                     continue
-                                status = meteojob.postuler(driver, job, info, error, mail)
+                                status = meteojob.postuler(driver, job, info, error)
                                 if status == "Postulé":
                                     count += 1
 
@@ -133,6 +156,8 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
 
                 else:
                     error(f"Erreur de connexion avec {mail['mail']} sur www.meteojob.com")
+                    send_email(mail['mail'], 'meteojob')
+
             elif website == 'lefigaro':
 
                 if lefigaro.login(driver, mail, info, error):
@@ -186,6 +211,8 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
 
                 else:
                     error(f"Erreur de connexion avec {mail['mail']} sur www.lefigaro.fr")
+                    send_email(mail['mail'], 'lefigaro')
+
             elif website == 'hellowork':
 
                 if hellowork.login(driver, mail, info, error):
@@ -242,6 +269,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
 
                 else:
                     error(f"Erreur de connexion avec {mail['mail']} sur www.hellowork.com")
+                    send_email(mail['mail'], 'hellowork')
 
             elif website == 'monster':
 
@@ -300,6 +328,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
 
                 else:
                     error(f"Erreur de connexion avec {mail['mail']} sur www.monster.com")
+                    send_email(mail['mail'], 'monster')
 
             elif website == 'welcometothejungle':
 
@@ -365,6 +394,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
 
                 else:
                     error(f"Erreur de connexion avec {mail['mail']} sur www.monster.com")
+                    send_email(mail['mail'], 'welcometothejungle')
 
             elif website == 'indeed':
 
@@ -427,3 +457,4 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
 
                 else:
                     error(f"Erreur de connexion avec {mail['mail']} sur www.monster.com")
+                    send_email(mail['mail'], 'indeed')
