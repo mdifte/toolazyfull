@@ -9,5 +9,5 @@ email_body = """Hello,
 email_subject = "Login unsuccessful for {website}"
 
 
-gmail_sender_account = "mr.ifte.bd@gmail.com"
-gmail_sender_password = 'qckqhvuzuhhqshji'
+gmail_sender_account = "test@gmail.com"
+gmail_sender_password = 'TestPASS'
