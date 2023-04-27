@@ -20,13 +20,13 @@ def login(driver, mail,info,error):
   
 
     try:
-        cokie_btn=WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/div[2]/div/div/div[2]/div/div/button[2]')))
+        cokie_btn=WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/div[2]/div/div/div[2]/div/div/button[2]')))
         cokie_btn.click()
-        time.sleep(20)
+        time.sleep(10)
         mouse = Controller()
         mouse.position = (300, 400)
         mouse.click(Button.left, 2)
-        time.sleep(10)
+        time.sleep(5)
     except:
         pass
         
@@ -39,18 +39,19 @@ def login(driver, mail,info,error):
 
     email_input=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//input[@type="email"]')))
     email_input.send_keys(mail['mail'])
-    time.sleep(5)
-
-    ok_btn=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//button[@type="submit"]')))
-    ok_btn.click()
-    time.sleep(5)
+    time.sleep(3)
+    driver.implicitly_wait(10)
+    try:
+        email_input.send_keys(Keys.ENTER)
+    except:
+        pass
+    time.sleep(3)
 
     password_input=WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//input[@type="password"]')))
     password_input.send_keys(mail['websites']['meteojob']['password'])
-    time.sleep(5)
+    time.sleep(3)
 
-    ok_btn = WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH, '//button[text()=" Je me connecte "]')))
-    ok_btn.click()
+    password_input.send_keys(Keys.ENTER)
 
     time.sleep(10)
     
@@ -78,22 +79,36 @@ def recherche(driver, link,info,error):
     # Séléction des résultats de recherches
 
     jobs = []
-    
-    try:
 
-        while True and len(jobs):
+
+    while True:
+        #If the element is not visible, break the loop
+        try:
+            show_more_element_xpath = "//a[@href=\"#show-more\"]"
+            show_more_element = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, show_more_element_xpath)))
+        except TimeoutException:
+            break
+
+        try:
+            #click on <a> tag with href="#show-more"
+            driver.execute_script("document.querySelector('a[href=\"#show-more\"]').click()")
+            time.sleep(3)
+        except:
+            pass
+
+
+    #Find all <li> with role="treeitem"
+    li_elements = driver.find_elements(By.XPATH, "//li[@role=\"treeitem\"]")
+
+    for elem in li_elements:
+        if "Candidature facile".lower() in elem.text.lower():
             try:
-                article=WebDriverWait(driver, 2).until(EC.visibility_of_element_located((By.XPATH, '/html/body/app-root/app-meteo/app-criterias-on-top/app-layout-view/app-layout/cc-layout/main/div/aside/div/cc-block/div/div[2]/app-offer-list/ul'+str(index)+']')))
-                link_=article.get_attribute('id')
-                link_d=link+'#'+link_
-                if 'job-offer' in link_d:
-                    jobs.append(link_d)
-            except Exception as e:
-                # amount-=1
-                error(e)
+                job_id = elem.get_attribute('id').split("-")[-1]
+                job_url = f"https://www.meteojob.com/jobs/meteo?oid={job_id}"
+                jobs.append(job_url)
+            except:
+                continue
 
-    except TimeoutException:
-        return False
 
     return jobs
 
@@ -102,54 +117,39 @@ def postuler(driver, url,info,error):
 
     driver.get(url)
 
+
+    #Find the button with cceventcategory="APPLY_OFFER" and cceventlabel="APPLICATION"
     try:
-        a=WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.XPATH, '/html/body/app-root/app-search/app-layout-view/app-layout/cc-layout/main/div/main/div/div[2]/app-offer-view/app-offer/div/ng-scrollbar/div/div/div/div/cc-block[3]/div')))
+        apply_button_xpath = "//button[@cceventcategory=\"APPLY_OFFER\" and @cceventlabel=\"APPLICATION\"]"
+        apply_button = WebDriverWait(driver, 15).until(EC.visibility_of_element_located((By.XPATH, apply_button_xpath)))
+
     except TimeoutException:
         return "Non Postulé"
 
     try:
-        cokie_btn=WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[3]/div/div[1]/div/div/div/div/div/div[2]/button[2]')))
-        cokie_btn.click()
-    except:
-        pass
 
-    try:
-        alert = driver.switch_to.alert
-        alert.accept()
-    except:
-        pass
-
-    try:
+        time.sleep(1)
+        driver.implicitly_wait(10)
+        #Find mat-checkbox with id contains mat-checkbox
+        checkbox_xpath = "//mat-checkbox[contains(@id, \"mat-checkbox\")]"
+        checkbox = WebDriverWait(driver, 8).until(EC.presence_of_element_located((By.XPATH, checkbox_xpath)))
+        checkbox.click()
 
         time.sleep(1)
 
-        try:
-            toggle_btn=WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.CLASS_NAME, 'd-inline-block align-middle ng-untouched ng-pristine ng-invalid')))
-            driver.execute_script("arguments[0].click();",toggle_btn)
-        except TimeoutException: 
-            pass
-
-        a=list(WebDriverWait(driver, 2).until(EC.presence_of_all_elements_located((By.TAG_NAME, 'button'))))
-        for btn in a:
-            if btn.text=='POSTULER À CETTE OFFRE':
-
-                action = ActionChains(driver)
-                action.move_to_element(btn).perform()
-
-                time.sleep(1)
-
-                btn.click()
+        apply_button_xpath = "//button[@cceventcategory=\"APPLY_OFFER\" and @cceventlabel=\"APPLICATION\"]"
+        apply_button = WebDriverWait(driver, 15).until(EC.visibility_of_element_located((By.XPATH, apply_button_xpath)))
+        apply_button.click()
+        time.sleep(1)
 
         try:
-            
-            WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CLASS_NAME, 'btn btn-secondary')))
+            WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, apply_button_xpath)))
             return "Non Postulé"
 
         except:
-
-            time.sleep(5)
-
+            time.sleep(3)
             return "Postulé"
 
-    except:
+    except Exception as e:
+        print(e)
         return "Non Postulé"
