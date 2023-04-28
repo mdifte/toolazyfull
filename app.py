@@ -29,7 +29,7 @@ def get_data(path):
 def set_data(data, path):
     if path == db_links_path:
         for mail in data:
-            with open(os.path.join('logs', f"{mail['mail']}.txt"), 'w+') as f:
+            with open(os.path.join('logs', f"{mail['mail'].strip()}.txt"), 'w+') as f:
                 for link in mail['links']:
                     f.write(link + '\n')
 
