@@ -55,6 +55,13 @@ def login(driver, mail,info,error):
     submit_btn=WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, '/html/body/main/section/div[2]/section/button')))
     submit_btn.click()
     time.sleep(10)
+
+    #if submit button still here, it means that the login failed, retrun False
+    try:
+        submit_btn=WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.XPATH, '/html/body/main/section/div[2]/section/button')))
+        return False
+    except:
+        pass
     
     return True
 

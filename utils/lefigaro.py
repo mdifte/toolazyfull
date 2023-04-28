@@ -35,7 +35,14 @@ def login(driver, mail,info,error):
 
     time.sleep(1)
     password_input.send_keys(Keys.ENTER)
-    time.sleep(2)
+    time.sleep(10)
+
+    #If password_input is still here, it means that the login failed, return False
+    try:
+        WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, '//*[@id="input-password"]')))
+        return False
+    except:
+        pass
 
     return True
 
