@@ -5,18 +5,25 @@ from urllib.parse import urlparse, parse_qs
 import pickle
 import os, inspect
 from . import hellowork, keljob, lefigaro,meteojob,monster,welcometothejungle, indeed
-from email_config import gmail_sender_account,gmail_sender_password, email_body, email_subject
+from email_config import gmail_sender_account,gmail_sender_password, email_body, email_subject, email_body_no_job, email_subject_no_job
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-def send_email(to, website):
+def send_email(to, website, type='login'):
     try:
         msg = MIMEMultipart()
+
         msg['From'] = gmail_sender_account
         msg['To'] = to
-        msg['Subject'] = email_subject.format(website=website)
-        msg.attach(MIMEText(email_body, 'plain'))
+
+        if type == 'login':
+            msg['Subject'] = email_subject.format(website=website)
+            msg.attach(MIMEText(email_body.format(website=website), 'plain'))
+
+        elif type == 'no_job':
+            msg['Subject'] = email_subject_no_job.format(website=website)
+            msg.attach(MIMEText(email_body_no_job.format(website=website), 'plain'))
 
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
@@ -103,13 +110,15 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
 
         set_data(links, db_links_path)
     for website in mail['websites']:
+        total_jobs = None
+
         if website_main and website_main != website:
             continue
         if mail['websites'][website]['research'] != '':
             if website == 'meteojob':
 
                 if meteojob.login(driver, mail, info, error):
-
+                    total_jobs = 0
                     info(f"\tConnecté au compte {mail['mail']} sur {website}")
 
                     for link in mail['websites'][website]['research'].split(','):
@@ -131,6 +140,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
                             pass
 
                         jobs = meteojob.recherche(driver, link, info, error)
+                        total_jobs += len(jobs)
 
                         if jobs:
 
@@ -161,7 +171,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
             elif website == 'lefigaro':
 
                 if lefigaro.login(driver, mail, info, error):
-
+                    total_jobs = 0
                     info(f"\tConnecté au compte {mail['mail']} sur {website}")
 
                     for link in mail['websites'][website]['research'].split(','):
@@ -180,7 +190,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
                             pass
 
                         jobs = lefigaro.recherche(driver, link, info, error)
-
+                        total_jobs += len(jobs)
                         if jobs:
 
                             for job in jobs:
@@ -216,7 +226,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
             elif website == 'hellowork':
 
                 if hellowork.login(driver, mail, info, error):
-
+                    total_jobs = 0
                     info(f"\tConnecté au compte {mail['mail']} sur {website}")
 
                     for link in mail['websites'][website]['research'].split(','):
@@ -238,6 +248,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
                         print('looking for jobs')
                         jobs = hellowork.recherche(driver, link, info, error)
                         print('Jobs: ' + str(len(jobs)))
+                        total_jobs += len(jobs)
 
                         if jobs:
                             for job in jobs:
@@ -274,7 +285,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
             elif website == 'monster':
 
                 if monster.login(driver, mail, info, error):
-
+                    total_jobs = 0
                     info(f"\tConnecté au compte {mail['mail']} sur {website}")
 
                     for link in mail['websites'][website]['research'].split(','):
@@ -297,7 +308,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
                             pass
 
                         jobs = monster.recherche(driver, link, info, error)
-
+                        total_jobs += len(jobs)
                         if jobs:
 
                             for job in jobs:
@@ -333,7 +344,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
             elif website == 'welcometothejungle':
 
                 if welcometothejungle.login(driver, mail, info, error):
-
+                    total_jobs = 0
                     info(f"\tConnecté au compte {mail['mail']} sur {website}")
 
                     for link in mail['websites'][website]['research'].split(','):
@@ -356,6 +367,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
                             pass
 
                         jobs = welcometothejungle.recherche(driver, link, info, error)
+                        total_jobs += len(jobs)
                         if jobs:
                             info(f"\tNombre de jobs trouvés : {len(jobs)}")
                             for job in jobs:
@@ -399,7 +411,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
             elif website == 'indeed':
 
                 if indeed.login(driver, mail, info, error):
-
+                    total_jobs = 0
                     info(f"\tConnecté au compte {mail['mail']} sur {website}")
 
                     for link in mail['websites'][website]['research'].split(','):
@@ -422,7 +434,7 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
                             pass
 
                         jobs = indeed.recherche(driver, link, info, error)
-
+                        total_jobs += len(jobs)
                         if jobs:
 
                             for job in jobs:
@@ -458,3 +470,8 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
                 else:
                     error(f"Erreur de connexion avec {mail['mail']} sur www.monster.com")
                     send_email(mail['mail'], 'indeed')
+
+
+        if total_jobs== 0:
+            send_email(to=mail['mail'], website=website, type='no_job')
+

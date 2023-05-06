@@ -10,4 +10,13 @@ email_subject = "Login unsuccessful for {website}"
 
 
 gmail_sender_account = "test@gmail.com"
-gmail_sender_password = 'TestPASS'
+gmail_sender_password = ''
+
+email_body_no_job = """Hello,
+    We are sorry to inform you that there are no jobs available for {website}.
+    Please check back later.
+    
+    Best regards,
+    The Test team"""
+
+email_subject_no_job = "No jobs available for {website}"
