@@ -137,17 +137,20 @@ def postuler(driver, url,info,error):
 
         time.sleep(1)
         driver.implicitly_wait(10)
-        #Find mat-checkbox with id contains mat-checkbox
-        checkbox_xpath = "//mat-checkbox[contains(@id, \"mat-checkbox\")]"
-        checkbox = WebDriverWait(driver, 8).until(EC.presence_of_element_located((By.XPATH, checkbox_xpath)))
-        checkbox.click()
+        try:
+            #Find mat-checkbox with id contains mat-checkbox
+            checkbox_xpath = "//mat-checkbox[contains(@id, \"mat-checkbox\")]"
+            checkbox = WebDriverWait(driver, 8).until(EC.presence_of_element_located((By.XPATH, checkbox_xpath)))
+            checkbox.click()
+        except:
+            pass
 
         time.sleep(1)
 
         apply_button_xpath = "//button[@cceventcategory=\"APPLY_OFFER\" and @cceventlabel=\"APPLICATION\"]"
         apply_button = WebDriverWait(driver, 15).until(EC.visibility_of_element_located((By.XPATH, apply_button_xpath)))
         apply_button.click()
-        time.sleep(1)
+        time.sleep(10)
 
         try:
             WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, apply_button_xpath)))
