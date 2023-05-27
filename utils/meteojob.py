@@ -55,14 +55,14 @@ def login(driver, mail,info,error):
 
     time.sleep(10)
 
-    #if password_input is still visible, the login was unsuccessful, return False
+
     try:
-        password_input=WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.XPATH, '//input[@type="password"]')))
-        return False
+        account_btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//a[@data-test="accountNavigation"]')))
+        return True
     except:
-        pass
-    
-    return True
+        return False
+
 
 def logout(driver,info,error):
     time.sleep(1)
