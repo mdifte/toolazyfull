@@ -85,7 +85,7 @@ def recherche(driver, link,info,error):
         jobs_results = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.ID, "job-search-results")))
     except TimeoutException:
-        return False
+        return []
 
     #Find all li elements inside the jobs_results element with partial class name "ais-Hits-list-item"
     time.sleep(5)
@@ -110,7 +110,7 @@ def postuler(driver, link,info,error,mail):
 
     try:
         apply_button = WebDriverWait(driver, 3).until(
-            EC.presence_of_element_located((By.XPATH, "//button[@data-testid='job_sticky_left-button-apply']")))
+            EC.presence_of_element_located((By.XPATH, "//button[@data-testid='job_sticky-button-apply']")))
     except TimeoutException as tex:
         apply_button = None
 

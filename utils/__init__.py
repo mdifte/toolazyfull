@@ -368,10 +368,9 @@ def run_mail(driver, mail, info, error, links, set_data, db_links_path,  website
 
                         jobs = welcometothejungle.recherche(driver, link, info, error)
                         total_jobs += len(jobs)
-                        if jobs:
+                        if jobs and len(jobs)>0:
                             info(f"\tNombre de jobs trouvés : {len(jobs)}")
                             for job in jobs:
-                                print()
                                 if jobs != None:
                                     try:
                                         if get_parameters(job)['o'][0] in [get_parameters(link_)['o'][0] for link_ in
